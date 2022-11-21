@@ -1,9 +1,20 @@
 import { createRouter, createWebHistory } from "vue-router";
+import store from "./store";
 
 const routes = [{
         path: "/",
         name: "Home",
         component: require('./components/Home.vue').default
+    },
+    {
+        path: "/about",
+        name: "About",
+        component: require('./components/About.vue').default
+    },
+    {
+        path: "/contact",
+        name: "Contact",
+        component: require('./components/Contact.vue').default
     },
     {
         path: "/login",
@@ -27,6 +38,13 @@ const router = createRouter({
     routes,
     linkActiveClass: "active",
     linkExactActiveClass: "exact-active"
+});
+
+router.beforeEach((to, from, next) => {
+    const auth = store.state.auth;
+    if ((to.name == 'Login' || to.name == 'Register') && auth) next({ path: '/' })
+    else if (to.meta.protect && !auth) next({ path: '/login' })
+    else next()
 })
 
 export default router;

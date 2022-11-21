@@ -61,7 +61,6 @@ export default {
             e.preventDefault();
             this.registerLoading = true;
             axios.get('/sanctum/csrf-cookie').then(response => {
-                console.log(response);
                 fetch('/api/user/register', {
                     method: 'post',
                     headers: {

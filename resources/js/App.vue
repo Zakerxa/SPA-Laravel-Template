@@ -9,10 +9,13 @@
        </div>
     </div>
     <div v-else>
+
         <Transition appear name="fade">
           <Navigation v-if="scrollDown"/>
         </Transition>
+
         <router-view/>
+
         <Footer />
     </div>
 
@@ -27,8 +30,7 @@ export default {
             loadingIcon : '<Zakerxa/>',
             loading : true,
             scrollPosition : '',
-            scrollDown : true,
-            admin : ''
+            scrollDown : true
         }
     },
     components:{
@@ -52,7 +54,7 @@ export default {
     },
     watch:{
       $route (to, from){
-        this.admin = localStorage.getItem('bearer');
+         // Every route change do something
       }
     },
     mounted(){

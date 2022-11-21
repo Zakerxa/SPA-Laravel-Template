@@ -3,7 +3,7 @@
 
     <div class="row justify-content-center d-flex align-items-center" style="min-height:85vh">
 
-        <div class="col-11 col-sm-8 col-md-6 col-lg-4 text-center position-relative" @onload="loginChecking">
+        <div class="col-11 col-sm-8 col-md-6 col-lg-4 text-center position-relative">
             <div v-show="loginLoading" class="overlayLoading">
                 <div class="row">
                     <p class="text-muted">Loading . . .</p>
@@ -55,7 +55,7 @@
 </template>
 
 <script>
-import axios from 'axios';
+
 export default {
     data() {
         return {
@@ -65,15 +65,12 @@ export default {
             checkIcon: 'fa-solid fa-eye-slash',
             checkState: true,
             disPassword: true,
-            password: '',
-            email : 'a@gmail.com',
+            password: 'karito',
+            email : 'e@gmail.com',
             errors : ''
         }
     },
     methods: {
-        loginChecking(){
-            console.log("Checking",this.count++)
-        },
         eyecheck() {
             this.checkState = !this.checkState;
             if (this.checkState) {
@@ -88,8 +85,7 @@ export default {
             if(this.password.length >= 1){
                 this.disPassword = false;
                 this.showicon = true;
-            }
-            else {
+            } else {
                 this.disPassword = true;
                 this.showicon = false;
             }
@@ -98,48 +94,29 @@ export default {
             if (this.disPassword) return;
             e.preventDefault();
             this.loginLoading = true;
-            axios.get('/sanctum/csrf-cookie').then(response => {
-                fetch('/api/user/login', {
-                    method: 'post',
-                    headers: {
-                        "Accept" : 'application/json',
-                        "Content-Type" : 'application/json',
-                        "X-CSRF-Token": this.csrfToken
-                    },
-                    credentials: "same-origin",
-                    body: JSON.stringify({
-                        password: this.password,
-                        email : this.email
-                    })
-                })
-                .then(res => res.json())
-                .then(res => {
-                    console.log(res);
-                    if(res.response == 'success') this.authRedirect(res.token);
-                    else this.clearData(res.errors);
-                })
-                .catch(err => this.clearData(err.errors))
-            });
-        },
-        clearData(res) {
-            this.loginLoading = false;
-            this.password = '';
-            this.email = '';
-            this.showicon = false;
-            if(res){
-                res.password ? this.errors = res.password[0] : '';
-                res.email ? this.errors = res.email[0] : '';
-                this.errors = 'Incorrect credentials.'
-            }
-            else this.errors = '';
+
+            this.$store.dispatch('login',{email:this.email,password:this.password})
+            .then(() => this.authRedirect())
+            .catch(() => this.clearData())
         },
         authRedirect (token) {
             this.loginLoading = false;
-            localStorage.setItem('auth', token);
-            if(localStorage.getItem('auth')){
+            if(this.$store.state.auth){
+              this.$store.commit('updateAuthorize');
               this.clearData();
               this.$router.push(this.$route.query.redirect || '/')
             }
+        },
+        clearData() {
+            this.loginLoading = false;
+            this.showicon = false;
+            this.password = '';
+            this.email = '';
+        }
+    },
+    computed:{
+        errors(){
+            return this.$store.state.loginError;
         }
     }
 }
@@ -163,31 +140,6 @@ export default {
         width: 100%;
         margin: 0;
         padding: 0;
-
-        img {
-            -webkit-animation: spin 2s linear infinite;
-            -moz-animation: spin 2s linear infinite;
-            animation: spin 2s linear infinite;
-        }
-
-        @-moz-keyframes spin {
-            100% {
-                -moz-transform: rotate(360deg);
-            }
-        }
-
-        @-webkit-keyframes spin {
-            100% {
-                -webkit-transform: rotate(360deg);
-            }
-        }
-
-        @keyframes spin {
-            100% {
-                -webkit-transform: rotate(360deg);
-                transform: rotate(360deg);
-            }
-        }
     }
 }
 </style>

@@ -7,6 +7,8 @@ import router from './router';
 import authorize from './authorize';
 // import Store Vuex
 import store from './store';
+// import Cookie
+import cookie from './cookie';
 //  import Ckeditor
 import CKEditor from '@ckeditor/ckeditor5-vue';
 /* import the fontawesome core */
@@ -36,19 +38,16 @@ import { faHistory } from '@fortawesome/free-solid-svg-icons';
 /* add icons to the library */
 library.add(faMailForward, faCircleLeft, faCross, faSignOut, faBell, faBars, faHistory, faCheckCircle, faEye, faEyeSlash, faPersonRunning, faGraduationCap, faIdCardClip, faSearch, faShieldHalved, faMapLocationDot, faEnvelope, faMobileScreen, faDesktop)
 
-const CSRFTOKEN = document.head.querySelector("[name~=csrf-token][content]").content;
 
 const app = createApp(App).use(CKEditor).use(router).use(store);
 // Create Global Vue Property
 const global = app.config.globalProperties;
 // Define Global CSRFTOKEN
-global.CSRFTOKEN = CSRFTOKEN;
-// Define Global SESSION KEY
-global.TOKEN = localStorage.getItem('auth');
+global.CSRFTOKEN = document.head.querySelector("[name~=csrf-token][content]").content;;
 // Define Global AUTHORIZE
 global.$http = authorize;
-
-console.log(global)
+// Define Global Cookie
+global.$cookie = cookie;
 
 app.component('font-awesome-icon', FontAwesomeIcon);
 app.mount('#app');
