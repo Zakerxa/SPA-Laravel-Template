@@ -1,5 +1,26 @@
 # Laravel + Vue
 
+**Download this project and run this command**
+```javascript
+composer install
+npm install
+```
+
+**Create database the name call VueLaravel**
+```javascript
+php artisan migrate
+```
+
+**Finally run this command**
+```javascript
+npm run watch
+php artisan serve
+```
+
+
+
+# Setup Manually
+
 **Create New Project**
 
 ```javascript
@@ -56,6 +77,15 @@ const router = createRouter({
 
 export default router;
 ```
+
+**Insert this code to your resources/views/home.blade.php**
+
+```html
+<div id="app"></div>
+
+<script src="{{ mix('/js/app.js') }}"></script>
+```
+
 **Install FontAwesome**
 ```javascript
 npm i --save @fortawesome/free-solid-svg-icons
@@ -72,15 +102,6 @@ npm install
 npm run dev
 npm run watch
 ```
-
-**Insert this code to your resources/views/home.blade.php**
-
-```html
-<div id="app"></div>
-
-<script src="{{ mix('/js/app.js') }}"></script>
-```
-
 
 **Instal Vue Ckeditor-5**
 ```javascript

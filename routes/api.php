@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Route;
 // Protected Route
 Route::group(['middleware'=>['auth:sanctum']],function(){
     Route::get('user/logout',[AuthController::class,'logout']);
+    Route::get('user',[AuthController::class,'index']);
 });
 
 

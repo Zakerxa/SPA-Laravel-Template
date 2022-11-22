@@ -4,17 +4,17 @@ import store from "./store";
 const routes = [{
         path: "/",
         name: "Home",
-        component: require('./components/Home.vue').default
+        component: require('./views/Home.vue').default
     },
     {
         path: "/about",
         name: "About",
-        component: require('./components/About.vue').default
+        component: require('./views/About.vue').default
     },
     {
         path: "/contact",
         name: "Contact",
-        component: require('./components/Contact.vue').default
+        component: require('./views/Contact.vue').default
     },
     {
         path: "/login",

@@ -57,19 +57,24 @@ class AuthController extends Controller
             $token = $user->createToken('auth')->plainTextToken;
             return response()->json([
                 'response' => 'success',
+                'user'=> ['name'=>$user['name'],'email'=>$user['email'],'phone'=>$user['phone']],
                 'token' => $token
             ]);
         }
         else return response(['errors' => 'The provided credentials do not match our records.']);
     }
 
+    public function index(Request $request){
+      return $request->user();
+    }
+
     public function logout(Request $request)
     {
         // Revoke all tokens...
-        // $request->user()->tokens()->delete();
+        $request->user()->tokens()->delete();
 
         // Revoke the token that was used to authenticate the current request...
-        $request->user()->currentAccessToken()->delete();
+        // $request->user()->currentAccessToken()->delete();
 
         // Revoke a specific token...
         // $request->user()->tokens()->where('id', $tokenId)->delete();

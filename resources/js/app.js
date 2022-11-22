@@ -1,4 +1,4 @@
-require('bootstrap')
+require('bootstrap');
 import { createApp } from 'vue';
 import App from "./App.vue";
 // import Router
@@ -51,6 +51,7 @@ global.$cookie = cookie;
 
 app.component('font-awesome-icon', FontAwesomeIcon);
 app.mount('#app');
+
 app.config.errorHandler = (err) => {
     /* handle error */
     console.log(err);

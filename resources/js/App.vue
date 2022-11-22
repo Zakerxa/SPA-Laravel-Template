@@ -22,8 +22,8 @@
 </template>
 
 <script>
-import Navigation from './views/Navigation.vue';
-import Footer from './views/Footer.vue';
+import Navigation from './components/Navigation.vue';
+import Footer from './components/Footer.vue';
 export default {
     data(){
         return{
@@ -52,14 +52,11 @@ export default {
         this.scrollPosition = currentScrollPosition;
        }
     },
-    watch:{
-      $route (to, from){
-         // Every route change do something
-      }
-    },
     mounted(){
        document.addEventListener('DOMContentLoaded', () => this.loading = false);
        this.$nextTick(()=> console.log("Render has been loaded"));
+       // Fetching UserData form parent
+       this.$store.dispatch('gettingAuthUser')
     }
 }
 </script>

@@ -1,42 +1,24 @@
-import { createStore } from 'vuex';
-import authorize from './authorize';
-import cookie from './cookie';
+import cookie from '../../cookie';
 
-const store = createStore({
+export default {
     state() {
         return {
-            count: 0,
-            auth: localStorage.getItem('auth') || null,
             loginLimit: cookie.getCookie('loginCount') || null,
             loginCount: 1,
-            loginError: '',
-            registererror: '',
+            loginError: ''
         }
     },
     getters: {
-        auth() {
-            return localStorage.getItem('auth') || null;
-        },
-        loginLimit() {
-            return cookie.getCookie('loginCount') || null;
+        loginErrors(state) {
+            return state.loginError;
         }
     },
     mutations: {
-        increment(state) {
-            state.count++;
-        },
-        decrement(state) {
-            if (state.count - 1) state.count--;
-        },
-        updateAuthorize(state, resToken) {
-            if (resToken) localStorage.setItem('auth', resToken);
-            state.auth = localStorage.getItem('auth') || null;
-        },
         loginTimes(state) {
             if (state.loginCount == 5) {
                 // console.log("Set Cookie ", state.loginCount);
                 state.loginCount = 1;
-                cookie.setCookie('loginCount', 'limit', 60 * 1000);
+                cookie.setCookie('loginCount', 'Login Limited', 3 * 60 * 1000);
                 state.loginLimit = cookie.getCookie('loginCount');
             }
         },
@@ -47,21 +29,13 @@ const store = createStore({
                 res.password ? state.loginError = res.password[0] : '';
                 res.email ? state.loginError = res.email[0] : '';
             } else state.loginError = '';
+        },
+        clearLoginError(state) {
+            state.loginError = '';
         }
     },
     actions: {
-        logout({ commit, state }) {
-            return new Promise((resolve, reject) => {
-                authorize('api/user/logout').then(res => {
-                    if (res.data.response == 'logout') {
-                        localStorage.removeItem('auth');
-                        state.auth = null;
-                        resolve();
-                    } else reject('Unauthorize');
-                })
-            })
-        },
-        login({ commit, state }, forms) {
+        login({ state, commit, rootState }, forms) {
 
             if (state.loginCount < 5) {
 
@@ -87,8 +61,11 @@ const store = createStore({
                         })
                         .then(res => res.json())
                         .then(res => {
-                            if (res.response == 'success') resolve(commit('updateAuthorize', res.token));
-                            else reject(commit('loginError', res.errors));
+                            if (res.response == 'success') {
+                                commit('updateAuthorize', res.token, { root: true })
+                                rootState.authUser = res.user;
+                                resolve();
+                            } else reject(commit('loginError', res.errors));
                         })
                         .catch(err => reject(commit('loginError', err.errors)))
                 })
@@ -101,7 +78,5 @@ const store = createStore({
 
         }
     }
-});
 
-
-export default store;
+}
