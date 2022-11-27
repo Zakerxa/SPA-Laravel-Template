@@ -30,6 +30,11 @@ const store = createStore({
             if (payload) localStorage.setItem('auth', payload);
             state.auth = localStorage.getItem('auth') || null;
         },
+        removeAuthorize(state) {
+            localStorage.removeItem('auth');
+            state.auth = null;
+            state.authUser = null;
+        },
         globalMessage(state, payload) {
             state.globalNoti = payload
         }

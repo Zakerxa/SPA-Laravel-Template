@@ -7,8 +7,8 @@ export default {
 
             return new Promise((resolve, reject) => {
                 authorize('api/user')
-                    .then(res => resolve(rootState.authUser = res.data))
-                    .catch(err => reject(err))
+                    .then(res => resolve(res.data ? rootState.authUser = res.data : rootState.authUser = null))
+                    .catch(err => reject(rootState.authUser = null))
             })
         }
     }

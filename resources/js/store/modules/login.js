@@ -63,7 +63,6 @@ export default {
                         .then(res => {
                             if (res.response == 'success') {
                                 commit('updateAuthorize', res.token, { root: true })
-                                rootState.authUser = res.user;
                                 resolve();
                             } else reject(commit('loginError', res.errors));
                         })

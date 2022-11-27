@@ -24,6 +24,7 @@
 <script>
 import Navigation from './components/Navigation.vue';
 import Footer from './components/Footer.vue';
+import { mapGetters } from 'vuex';
 export default {
     data(){
         return{
@@ -52,11 +53,27 @@ export default {
         this.scrollPosition = currentScrollPosition;
        }
     },
+    computed: {
+       ...mapGetters(['authUser'])
+    },
+    watch:{
+      $route(to,from){
+        this.$store.dispatch('gettingAuthUser').then(()=>{
+           if(!this.authUser) this.$store.commit('removeAuthorize');
+        }).catch(()=>{
+           if(!this.authUser) this.$store.commit('removeAuthorize');
+        })
+      }
+    },
     mounted(){
        document.addEventListener('DOMContentLoaded', () => this.loading = false);
        this.$nextTick(()=> console.log("Render has been loaded"));
        // Fetching UserData form parent
-       this.$store.dispatch('gettingAuthUser')
+       fetch('api/products').then(res=>res.json())
+       .then(res=>{
+        console.log(res)
+       })
+       .catch(err=>console.log(err));
     }
 }
 </script>
