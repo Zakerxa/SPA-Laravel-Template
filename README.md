@@ -143,7 +143,7 @@ data(){
 **Run PHP Artisan serve**
 
 ```javascript
-php aritsan serve
+php artisan serve
 ```
 
 **Install Sanctum**
